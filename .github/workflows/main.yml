@@ -1,0 +1,32 @@
+name: Run Tests
+on:
+  workflow_dispatch:
+jobs:
+  test:
+    name: KERIA ${{ matrix.keria_tag }} - Keri Witness ${{ matrix.keri_witness_demo_tag}} - Signify ${{matrix.signify_ts_repo}} @ ${{matrix.signify_ts_branch}}
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        keria_tag: [latest, "0.1.0"]
+        keri_witness_demo_tag: ["1.1.0"]
+        gleif_vlei_tag: [latest]
+        signify_ts_repo: [lenkan/signify-ts]
+        signify_ts_branch: [integration-scripts]
+    env:
+      KERIA_TAG: ${{ matrix.keria_tag }}
+      KERI_WITNESS_DEMO_TAG: ${{ matrix.keri_witness_demo_tag }}
+      GLEIF_VLEI_TAG: ${{ matrix.gleif_vlei_tag }}
+      SIGNIFY_TS_REPO: ${{ matrix.signify_ts_repo }}
+      SIGNIFY_TS_BRANCH: ${{ matrix.signify_ts_branch }}
+    steps:
+      - name: Checkout repo
+        uses: actions/checkout@v2
+      - name: Build any local images
+        run: docker compose build
+      - name: Start dependencies
+        run: docker compose up deps --pull always
+      - name: Run signify integration tests
+        run: docker compose run --rm signify-ts
+      - name: Print logs
+        run: docker compose logs
+        if: always()
