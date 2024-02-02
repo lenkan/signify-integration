@@ -33,3 +33,11 @@ docker compose build
 docker compose up --pull deps
 docker compose run --rm signify-ts
 ```
+
+
+## TODOS
+
+- Decide how to pull signify-ts integration tests. Or should there be another set of tests in this repo?
+- Start pushing docker images from all repos on every commit.
+- Add schedule: https://docs.github.com/en/actions/using-workflows/events-that-trigger-workflows#schedule
+
